@@ -1,0 +1,8 @@
+numpy>=1.24
+matplotlib>=3.7
+pillow>=9.5
+streamlit>=1.30
+pytest>=7.4
+# optional, only for reading/writing video in the applied features:
+# imageio>=2.31
+# imageio-ffmpeg>=0.4
