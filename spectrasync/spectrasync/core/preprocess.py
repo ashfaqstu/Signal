@@ -4,6 +4,16 @@ from __future__ import annotations
 
 import numpy as np
 
+#: Rec.709 luma weights. Perceptually correct, unlike a plain channel mean, so
+#: edges keep their contrast and the correlation peak stays sharp.
+LUMA = np.array([0.2126, 0.7152, 0.0722])
+
+
+def to_gray(rgb):
+    """(H, W, 3) float -> (H, W) float luma. Passes (H, W) through unchanged."""
+    a = np.asarray(rgb, dtype=np.float64)
+    return a if a.ndim == 2 else a[..., :3] @ LUMA
+
 
 def as_float(a):
     """float64 view of any input. uint8 arithmetic silently wraps -- never

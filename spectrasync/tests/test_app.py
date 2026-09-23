@@ -38,6 +38,23 @@ def test_each_page_renders(label):
     assert not at.exception, f"{label}: {at.exception}"
 
 
+@pytest.mark.parametrize("label,key,source", [
+    ("2. Rotation & Scale", "rs_src", "Two photos"),
+    ("2. Rotation & Scale", "rs_src", "Synthetic"),
+    ("3. Stacking", "st_src", "Photo set"),
+    ("3. Stacking", "st_src", "Synthetic"),
+    ("4. Object Removal", "rm_src", "Photo set"),
+    ("4. Object Removal", "rm_src", "Synthetic"),
+    ("4. Object Removal", "rm_src", "Video file"),
+    ("5. Highlight", "hl_src", "Photo set"),
+    ("5. Highlight", "hl_src", "Synthetic"),
+])
+def test_page_every_source(label, key, source):
+    at = _run(label)
+    at.radio(key=key).set_value(source).run()
+    assert not at.exception, f"{label} / {source}: {at.exception}"
+
+
 def test_registry_drives_the_dropdowns():
     """A new registry entry must appear in the UI without touching page code."""
     at = _run("1. Translation")

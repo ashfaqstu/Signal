@@ -126,6 +126,63 @@ def centre_crop(img, frac=0.75):
     return img[y0:y0 + h, x0:x0 + w]
 
 
+def valid_box(mask):
+    """An axis-aligned box (y0, y1, x0, x1) lying entirely inside `mask`.
+
+    Greedy: keep trimming whichever edge has the largest fraction of invalid
+    pixels. For a translation-only stack the common valid region IS a rectangle
+    and this finds it exactly; with rotation it returns a large inscribed box.
+    Crop with img[y0:y1, x0:x1].
+    """
+    m = np.asarray(mask, dtype=bool)
+    y0, y1, x0, x1 = 0, m.shape[0], 0, m.shape[1]
+    while y1 > y0 and x1 > x0:
+        sub = m[y0:y1, x0:x1]
+        if sub.all():
+            return y0, y1, x0, x1
+        bad = [(~sub[0]).mean(), (~sub[-1]).mean(),
+               (~sub[:, 0]).mean(), (~sub[:, -1]).mean()]
+        k = int(np.argmax(bad))
+        if k == 0:
+            y0 += 1
+        elif k == 1:
+            y1 -= 1
+        elif k == 2:
+            x0 += 1
+        else:
+            x1 -= 1
+    return 0, 0, 0, 0
+
+
+def border_mask(shape, margin):
+    """Boolean mask, True everywhere except within `margin` px of an edge.
+
+    The standard "ignore the border" mask for measuring a synthetic shift or
+    warp: content near the edge is unreliable there (a circular shift wraps
+    it, a rotation/scale can sample outside the source image). `margin=0`
+    returns an all-True mask.
+    """
+    H, W = int(shape[0]), int(shape[1])
+    margin = max(0, int(margin))
+    m = np.zeros((H, W), dtype=bool)
+    m[margin:H - margin, margin:W - margin] = True
+    return m
+
+
+def mask_from_box(shape, box):
+    """Boolean mask, True inside the axis-aligned box (y0, y1, x0, x1).
+
+    The display/measurement counterpart of `valid_box`: turn the box it
+    returns back into a mask the same shape as the image, for slicing or for
+    combining with another mask via `&`.
+    """
+    H, W = int(shape[0]), int(shape[1])
+    y0, y1, x0, x1 = box
+    m = np.zeros((H, W), dtype=bool)
+    m[y0:y1, x0:x1] = True
+    return m
+
+
 def apply_registration(mov, angle_deg, scale, dy, dx):
     """Bring `mov` onto the reference using a full similarity estimate.
 

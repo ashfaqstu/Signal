@@ -5,23 +5,21 @@ from __future__ import annotations
 import glob
 import os
 
+import io
+
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
-#: Rec.709 luma weights. Perceptually correct, unlike a plain channel mean, so
-#: edges keep their contrast and the correlation peak stays sharp.
-LUMA = np.array([0.2126, 0.7152, 0.0722])
-
-
-def to_gray(rgb):
-    """(H, W, 3) float -> (H, W) float luma. Passes (H, W) through unchanged."""
-    a = np.asarray(rgb, dtype=np.float64)
-    return a if a.ndim == 2 else a[..., :3] @ LUMA
+from ..core.preprocess import LUMA, to_gray  # noqa: F401  (re-exported)
 
 
 def load_rgb(path, max_side=None):
-    """Load any image as float64 RGB in [0, 1]."""
-    img = Image.open(path).convert("RGB")
+    """Load any image (path or file-like) as float64 RGB in [0, 1].
+
+    `max_side` DOWNSCALES so the longer side fits -- the whole picture is kept.
+    EXIF orientation is applied, so a phone photo comes out upright.
+    """
+    img = ImageOps.exif_transpose(Image.open(path)).convert("RGB")
     if max_side:
         w, h = img.size
         if max(w, h) > max_side:
@@ -35,12 +33,91 @@ def load_gray(path, max_side=None):
     return to_gray(load_rgb(path, max_side=max_side))
 
 
+def resize_to(a, shape):
+    """Resample a float image to (H, W) with Lanczos. Works on (H, W) and (H, W, C)."""
+    a = np.asarray(a, dtype=np.float64)
+    H, W = int(shape[0]), int(shape[1])
+    if a.shape[:2] == (H, W):
+        return a
+    def one(ch):
+        im = Image.fromarray(ch.astype(np.float32)).resize((W, H), Image.LANCZOS)
+        return np.asarray(im, dtype=np.float64)
+    if a.ndim == 2:
+        return one(a)
+    return np.stack([one(a[..., c]) for c in range(a.shape[2])], axis=-1)
+
+
+def resize_max_side(a, max_side):
+    """Downscale so the longer side is at most `max_side`. Never crops, never
+    upscales -- the aspect ratio and the whole field of view are kept."""
+    a = np.asarray(a, dtype=np.float64)
+    h, w = a.shape[:2]
+    if not max_side or max(h, w) <= max_side:
+        return a
+    k = max_side / float(max(h, w))
+    return resize_to(a, (max(1, round(h * k)), max(1, round(w * k))))
+
+
+def load_many(sources, max_side=None, gray=True):
+    """Load several images (paths or file-like objects) at ONE common size.
+
+    A stack needs identical shapes, and shots from one camera can still differ
+    by a pixel or two, so every image is RESIZED to the first one's shape --
+    never cropped.
+    """
+    load = load_gray if gray else load_rgb
+    out = [load(s, max_side=max_side) for s in sources]
+    if out:
+        shape = out[0].shape[:2]
+        out = [resize_to(a, shape) for a in out]
+    return out
+
+
 def save_png(path, arr):
     """Write a float array in [0, 1] (or [0,1]^3) as an 8-bit PNG."""
     a = np.clip(np.asarray(arr, dtype=np.float64), 0.0, 1.0)
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     Image.fromarray((a * 255.0).round().astype(np.uint8)).save(path)
     return path
+
+
+def png_bytes(arr):
+    """The same 8-bit PNG as `save_png`, returned as bytes (for a download)."""
+    a = np.clip(np.asarray(arr, dtype=np.float64), 0.0, 1.0)
+    buf = io.BytesIO()
+    Image.fromarray((a * 255.0).round().astype(np.uint8)).save(buf, format="PNG")
+    return buf.getvalue()
+
+
+def centre_square(a):
+    """The largest centred even square cropped from an image already at its
+    working size -- the log-polar (Fourier-Mellin) stage needs one.
+
+    Unlike `even_square`, this never resizes: call it once the image is
+    already the size you want. Because the crop shares the image's centre, an
+    angle, scale or shift measured on it applies unchanged to the whole image.
+    """
+    n = min(a.shape[0], a.shape[1]) // 2 * 2
+    y0, x0 = (a.shape[0] - n) // 2, (a.shape[1] - n) // 2
+    return a[y0:y0 + n, x0:x0 + n]
+
+
+def even_square(a, max_side=512):
+    """An even square no larger than `max_side` -- required by the log-polar stage.
+
+    Downscales FIRST so the short side fits, then crops to a centred square
+    (see `centre_square`), so a big photo keeps its full field of view instead
+    of shrinking to a tiny centre patch.
+    """
+    a = np.asarray(a, dtype=np.float64)
+    short, long_ = min(a.shape[:2]), max(a.shape[:2])
+    if short > max_side:
+        a = resize_max_side(a, int(round(long_ * max_side / short)))
+    n = min(a.shape[0], a.shape[1], max_side)
+    n = n // 2 * 2
+    y0 = (a.shape[0] - n) // 2
+    x0 = (a.shape[1] - n) // 2
+    return a[y0:y0 + n, x0:x0 + n]
 
 
 def load_folder(pattern, max_side=None, gray=True, limit=None):

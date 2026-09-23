@@ -28,7 +28,7 @@ from ..types import RegistrationResult
 from .correlation import phase_correlation
 from .mellin import PRESETS, estimate_rotation_scale
 from .metrics import ncc
-from .preprocess import as_float, match_shapes
+from .preprocess import as_float, match_shapes, to_gray
 from .transform import apply_registration, centre_crop, unwarp_similarity
 
 
@@ -126,12 +126,16 @@ def register_many(frames, reference=0, mode="translation", min_ratio=1.5,
     on_fail = "identity"  keep the frame unshifted, flagged in the result
               "drop"      leave it out of the returned lists entirely
               "keep"      trust the estimate anyway (the old behaviour)
+
+    Colour frames (H, W, 3) are registered on their luma, and the SAME
+    transform is then applied to every channel, so the channels stay locked.
     """
     frames = [as_float(f) for f in frames]
     ref = frames[reference] if isinstance(reference, int) else as_float(reference)
+    ref = to_gray(ref)
     aligned, results = [], []
     for f in frames:
-        r = register_pair(ref, f, mode=mode, **kwargs)
+        r = register_pair(ref, to_gray(f), mode=mode, **kwargs)
         locked = r.stats.ratio >= min_ratio
         if not locked and on_fail == "drop":
             continue
@@ -139,6 +143,8 @@ def register_many(frames, reference=0, mode="translation", min_ratio=1.5,
             r = RegistrationResult(angle_deg=0.0, scale=1.0, dy=0.0, dx=0.0,
                                    stats=r.stats, aligned=f, rs=r.rs,
                                    translation=r.translation)
+        elif f.ndim == 3:
+            r.aligned = apply_registration(f, r.angle_deg, r.scale, r.dy, r.dx)
         aligned.append(r.aligned if r.aligned is not None else f)
         results.append(r)
     if not results:
@@ -146,3 +152,19 @@ def register_many(frames, reference=0, mode="translation", min_ratio=1.5,
                          f"(min_ratio={min_ratio}); the sequence may be "
                          "too noisy or too low in texture to register")
     return aligned, results
+
+
+def describe_similarity(angle_deg, scale):
+    """A `register_similarity` result, in one plain-English sentence.
+
+    With rows counted DOWNWARDS, this project's positive angle turns the
+    picture CLOCKWISE as seen on screen (checked by warping a single dot).
+    """
+    turn = ("no measurable rotation" if abs(angle_deg) < 0.05 else
+            f"rotated {abs(angle_deg):.2f}° "
+            f"{'clockwise' if angle_deg > 0 else 'counter-clockwise'}")
+    pct = 100.0 * (scale - 1.0)
+    size = ("the same size" if abs(pct) < 0.1 else
+            f"{abs(pct):.1f}% "
+            f"{'larger (zoomed in)' if pct > 0 else 'smaller (zoomed out)'}")
+    return f"relative to the reference, the second photo is {turn} and {size}"

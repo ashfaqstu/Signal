@@ -111,6 +111,20 @@ def gradient_magnitude(img, smooth=0.0):
     return np.hypot(gy, gx)
 
 
+def phase_swap(magnitude_of, phase_of):
+    """Reconstruct an image from ONE image's magnitude and ANOTHER's phase.
+
+    The classic demonstration that structure lives in the phase: the result
+    looks like `phase_of`, not `magnitude_of`, even though every magnitude
+    value came from the other image.
+    """
+    magnitude_of = as_float(magnitude_of)
+    phase_of = as_float(phase_of)
+    mixed = (np.abs(np.fft.fft2(magnitude_of))
+             * np.exp(1j * np.angle(np.fft.fft2(phase_of))))
+    return np.real(np.fft.ifft2(mixed))
+
+
 def mellin_highpass(shape):
     """Reddy & Chatterji emphasis filter for the Fourier-Mellin stage.
 

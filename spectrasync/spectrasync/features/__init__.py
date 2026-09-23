@@ -5,7 +5,9 @@ from .highlight import (DETECTORS, adaptive_threshold, bounding_boxes,
                         highlight_sequence, outline_of)
 from .pipeline import (PRESET_PIPELINES, STEPS, Pipeline, PipelineResult)
 from .removal import (background_and_foreground, compare_temporal_filters,
-                      pixel_timeseries, remove_moving_objects, running_median)
-from .stacking import (align_frames, common_valid_mask, compare_reducers,
-                       stack, stack_report)
+                      most_disturbed_pixel, pixel_timeseries,
+                      remove_moving_objects, running_median)
+from .stacking import (align_frames, align_reference_to_output,
+                       common_valid_mask, compare_reducers, stack,
+                       stack_report)
 from .temporal import REDUCERS, reduce, theoretical_gain_db

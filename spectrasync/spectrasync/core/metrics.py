@@ -59,6 +59,47 @@ def ncc(a, b, mask=None):
     return float((a * b).sum() / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-12))
 
 
+def estimate_noise(img, mask=None):
+    """Noise sigma of ONE image, with no clean reference (Immerkaer, 1996).
+
+    Convolve with the 3x3 kernel [[1,-2,1],[-2,4,-2],[1,-2,1]] -- the
+    difference of two Laplacians, which cancels smooth image structure and
+    leaves mostly noise -- then
+
+        sigma = sqrt(pi/2) * mean|I * N| / 6
+
+    Real texture still leaks through a little, so a clean photo reads a small
+    positive floor rather than zero. Compare values on the SAME scene: a raw
+    frame against the stacked output is exactly that comparison.
+    """
+    from .preprocess import to_gray
+    a = to_gray(as_float(img))
+    c = (a[:-2, :-2] - 2 * a[:-2, 1:-1] + a[:-2, 2:]
+         - 2 * a[1:-1, :-2] + 4 * a[1:-1, 1:-1] - 2 * a[1:-1, 2:]
+         + a[2:, :-2] - 2 * a[2:, 1:-1] + a[2:, 2:])
+    c = np.abs(c)
+    if mask is not None:
+        c = c[np.asarray(mask, dtype=bool)[1:-1, 1:-1]]
+    return float(np.sqrt(np.pi / 2.0) * c.mean() / 6.0)
+
+
+def angle_error_deg(estimated_deg, true_deg):
+    """Absolute angular error in degrees, wrapped at +-180 first.
+
+    A plain subtraction is wrong at the wrap: 179 deg and -179 deg are 2
+    degrees apart, not 358. Wrapping into (-180, 180] before the absolute
+    value fixes it. Used to score a `func_rotation_and_scale` estimate
+    against a known angle.
+    """
+    return float(abs(((estimated_deg - true_deg + 180.0) % 360.0) - 180.0))
+
+
+def percent_error(estimated, true):
+    """|estimated - true| / |true|, as a percentage. Used to score a scale
+    estimate against a known value."""
+    return float(100.0 * abs(estimated - true) / abs(true)) if true else float("inf")
+
+
 def shift_error(true_dy, true_dx, est_dy, est_dx):
     """Absolute per-axis error and its Euclidean norm."""
     ey, ex = abs(est_dy - true_dy), abs(est_dx - true_dx)

@@ -1,6 +1,5 @@
 """Estimate the spatial translation between two images by phase correlation."""
 
-import numpy as np
 import streamlit as st
 
 import spectrasync as ss
@@ -45,7 +44,7 @@ def render():
         if base is None:
             st.warning("Upload a base image, or put photo_b.jpg in data/raw/.")
             return
-        ref = C.even_square(base)
+        ref = ss.even_square(base)
         mov = ss.fourier_shift(ref, dy, dx)
         if noise > 0:
             ref, mov = ss.add_noise(ref, noise), ss.add_noise(mov, noise)

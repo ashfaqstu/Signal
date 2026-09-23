@@ -53,7 +53,7 @@ def render():
         st.warning("Upload an image, or put photo_b.jpg in data/raw/.")
         return
 
-    ref = C.even_square(base, max_side=320)
+    ref = ss.even_square(base, max_side=320)
     mov = ss.fourier_shift(ref, dy, dx)
     R, F1, F2 = ss.cross_power_spectrum(ref, mov)
     r = ss.phase_correlation(ref, mov)
@@ -77,8 +77,7 @@ def render():
         elif i == 1:
             C.figure(ss.figure_spectra(F1, F2), "the two magnitude spectra")
         elif i == 2:
-            mix = np.abs(np.fft.fft2(ref)) * np.exp(1j * np.angle(np.fft.fft2(mov)))
-            C.image(np.real(np.fft.ifft2(mix)),
+            C.image(ss.phase_swap(ref, mov),
                     "magnitude of A with the phase of B - structure follows PHASE")
         elif i == 3:
             C.figure(ss.figure_spectra(F1, F2, R),

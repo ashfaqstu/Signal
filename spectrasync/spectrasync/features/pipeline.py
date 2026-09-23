@@ -145,6 +145,6 @@ class Pipeline:
 #: that is the fastest way to answer "now make it do X instead".
 PRESET_PIPELINES = {
     "denoise":   Pipeline("denoise").then("align").then("reduce", method="sigma_clip"),
-    "removal":   Pipeline("removal").then("align").then("reduce", method="median"),
+    "removal":   Pipeline("removal").then("align").then("reduce", method="shorth"),
     "highlight": Pipeline("highlight").then("align").then("detect"),
 }

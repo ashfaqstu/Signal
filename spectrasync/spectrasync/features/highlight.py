@@ -21,7 +21,7 @@ from __future__ import annotations
 import numpy as np
 
 from ..core.filters import bandpass, gaussian_blur, gradient_magnitude, lowpass
-from ..core.preprocess import as_float, to_unit
+from ..core.preprocess import as_float, to_gray, to_unit
 from ..registry import Registry
 from ..types import DetectionResult
 from ..viz.overlays import tint
@@ -46,8 +46,16 @@ def score_raw(diff, **kw):
 
 
 def change_score(frame, background, detector="bandpass", **kw):
-    """How much each pixel differs from the background, after filtering."""
-    return DETECTORS[detector](as_float(frame) - as_float(background), **kw)
+    """How much each pixel differs from the background, after filtering.
+
+    Always computed on LUMA, even when `frame`/`background` are colour: change
+    detection needs no colour information, and `outline_of` below relies on a
+    2-D (H, W) mask -- a 3-D (H, W, 3) one would take its Fourier transform
+    over the wrong axes. The colour, if any, only reappears later, in the
+    overlay drawn over the original `frame`.
+    """
+    diff = to_gray(as_float(frame)) - to_gray(as_float(background))
+    return DETECTORS[detector](diff, **kw)
 
 
 def adaptive_threshold(score, k=3.0, mask=None):
@@ -115,6 +123,14 @@ def highlight(frame, background, detector="bandpass", k=3.0, smooth=1.5,
               min_area=40, colour=(0.65, 0.19, 0.12), valid=None, **kw):
     """Full pipeline: background -> change score -> mask -> outline -> overlay.
 
+    `frame` and `background` may be grayscale or colour; detection runs on
+    luma either way (see `change_score`), and the overlay is drawn over
+    `frame` exactly as given, so a colour photo gets a colour result.
+
+    `valid`, if given, restricts both the threshold statistics and the score
+    itself to the region where every input frame was actually aligned --
+    pixels outside it never register as a detection.
+
     Returns a DetectionResult with `.mask`, `.outline`, `.overlay`, `.boxes`.
     """
     score = change_score(frame, background, detector=detector, **kw)
@@ -130,7 +146,21 @@ def highlight(frame, background, detector="bandpass", k=3.0, smooth=1.5,
 
 
 def highlight_sequence(frames, background=None, **kw):
-    """Highlight every frame of a sequence against a shared background plate."""
+    """Highlight every frame of a sequence against ONE shared background plate.
+
+    `mode` and `reducer` are the only kwargs a caller who has not already run
+    object removal needs to supply -- they steer that step (see
+    `remove_moving_objects`); every other kwarg (`detector`, `k`, `smooth`,
+    `min_area`, `valid`, `low`/`high`, ...) is forwarded to `highlight` for
+    each frame.
+
+    Pass `background` explicitly (typically `remove_moving_objects(...).output`,
+    computed once by the caller) to skip recomputing it here and to highlight
+    `frames` exactly as given, in their own order.
+
+    Returns `(detections, background)`, where `detections[i]` is the
+    DetectionResult for `frames[i]`.
+    """
     from .removal import remove_moving_objects
     if background is None:
         res = remove_moving_objects(frames, **{k: v for k, v in kw.items()

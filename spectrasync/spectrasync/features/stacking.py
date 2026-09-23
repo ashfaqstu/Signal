@@ -17,9 +17,37 @@ import numpy as np
 from ..core.metrics import ncc, psnr
 from ..core.preprocess import as_float
 from ..core.register import register_many
-from ..core.transform import alignment_valid_mask
+from ..core.transform import alignment_valid_mask, valid_box
 from ..types import StackResult
 from .temporal import REDUCERS, reduce, theoretical_gain_db
+
+
+def align_reference_to_output(output, reference, valid=None):
+    """Bring an INDEPENDENTLY captured reference image onto a stacking result.
+
+    A ground-truth shot taken on its own is in its own frame, not the stack's
+    (which is pinned to the first uploaded frame), so it must be registered
+    before any pixelwise comparison -- PSNR, NCC, a residual image -- means
+    anything.
+
+    `reference` is resized to `output`'s shape first (a clean reference need
+    not be captured at exactly the same resolution). `valid`, if given, is
+    ANDed with the registration's own valid mask. Returns
+    `(aligned_reference, mask)`.
+    """
+    from ..core.preprocess import to_gray
+    from ..core.register import register_translation
+    from ..core.transform import apply_registration
+    from ..io.images import resize_to
+
+    shape = output.shape[:2]
+    reference = resize_to(reference, shape)
+    t = register_translation(to_gray(output), to_gray(reference))
+    aligned = apply_registration(reference, 0.0, 1.0, t.dy, t.dx)
+    mask = alignment_valid_mask(shape, 0.0, 1.0, t.dy, t.dx)
+    if valid is not None:
+        mask = valid & mask
+    return aligned, mask
 
 
 def align_frames(frames, reference=0, mode="translation", **kwargs):
@@ -69,7 +97,8 @@ def stack(frames, reducer="median", reference=0, mode="translation",
 
     if mask_invalid and results:
         m = common_valid_mask(results, out.shape)
-        out = np.where(m, out, reduce(frames, reducer, **(reducer_kwargs or {})))
+        mb = m[..., None] if out.ndim == 3 else m
+        out = np.where(mb, out, reduce(frames, reducer, **(reducer_kwargs or {})))
     else:
         m = np.ones(out.shape[:2], dtype=bool)
 
@@ -79,6 +108,7 @@ def stack(frames, reducer="median", reference=0, mode="translation",
         stats={"confidence": confid,
                "n_locked": n_locked if align else None,
                "valid_fraction": float(m.mean()),
+               "valid_box": valid_box(m),
                "theoretical_gain_db": theoretical_gain_db(len(frames), reducer),
                "mode": mode, "aligned": align})
 
