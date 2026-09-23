@@ -1,0 +1,139 @@
+/* SpectraSync Studio design tokens.
+   Every colour, radius, shadow and timing in the app comes from here.
+   Components reference var(--token) only. */
+
+:root {
+  --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-xs: 11px;
+  --fs-sm: 12.5px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 28px;
+  --fs-3xl: 38px;
+
+  --r-sm: 6px;
+  --r: 8px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --r-2xl: 24px;
+  --r-pill: 999px;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 120ms;
+  --t: 200ms;
+  --t-slow: 360ms;
+
+  --topbar: 56px;
+  --rail: 76px;
+  --flyout: 340px;
+  --sidebar: 248px;
+
+  /* brand (fixed in both themes) */
+  --brand: #8b3dff;
+  --brand-hover: #7a2ff0;
+  --brand-press: #6a24d6;
+  --on-brand: #ffffff;
+  --teal: #00c4cc;
+  --grad-brand: linear-gradient(100deg, #00c4cc 0%, #4f5bf5 52%, #8b3dff 100%);
+  --grad-hero: linear-gradient(118deg, #00c4cc 0%, #3a7bf0 34%, #6a4cf6 64%, #9a3dfc 100%);
+
+  /* one gradient per tool, like Canva's design-type tiles */
+  --tool-align: linear-gradient(135deg, #00c4cc, #2f80ed);
+  --tool-rotate: linear-gradient(135deg, #ff9a3c, #ff5f6d);
+  --tool-stack: linear-gradient(135deg, #8b3dff, #5b6cff);
+  --tool-remove: linear-gradient(135deg, #1fc27a, #00a7b5);
+  --tool-highlight: linear-gradient(135deg, #ff4f8b, #ff8a3d);
+  --tool-spectrum: linear-gradient(135deg, #3b3fd9, #a23cf3);
+}
+
+/* LIGHT */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f3f4f6;
+  --surface-3: #e9eaee;
+  --canvas: #e8e9ed;
+  --line: #e4e6ea;
+  --line-strong: #d3d6dc;
+  --text: #0e1318;
+  --text-2: #4a5462;
+  --text-3: #8b93a0;
+  --brand-soft: #f2eaff;
+  --brand-soft-2: #e6d8ff;
+  --brand-text: #7327e5;
+  --ok: #0c9f68;
+  --ok-soft: #e3f7ee;
+  --warn: #d9820a;
+  --warn-soft: #fff3e0;
+  --bad: #e03e4a;
+  --bad-soft: #fdecee;
+  --scrim: rgb(14 19 24 / 0.4);
+  --shadow-1: 0 1px 2px rgb(14 19 24 / 0.06), 0 1px 3px rgb(14 19 24 / 0.08);
+  --shadow-2: 0 6px 16px rgb(14 19 24 / 0.08), 0 2px 4px rgb(14 19 24 / 0.05);
+  --shadow-3: 0 20px 48px rgb(14 19 24 / 0.16), 0 4px 10px rgb(14 19 24 / 0.06);
+  --shadow-page: 0 2px 6px rgb(14 19 24 / 0.08), 0 12px 32px rgb(14 19 24 / 0.1);
+}
+
+/* DARK */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0f1013;
+    --surface: #1b1c20;
+    --surface-2: #25272c;
+    --surface-3: #2e3036;
+    --canvas: #121317;
+    --line: #2b2d33;
+    --line-strong: #3b3e45;
+    --text: #f1f2f4;
+    --text-2: #b3b8c1;
+    --text-3: #7b828d;
+    --brand-soft: #291d44;
+    --brand-soft-2: #36265a;
+    --brand-text: #b58cff;
+    --ok: #2fc58a;
+    --ok-soft: #10281f;
+    --warn: #f0a33a;
+    --warn-soft: #2d2212;
+    --bad: #ff6671;
+    --bad-soft: #2f1619;
+    --scrim: rgb(0 0 0 / 0.6);
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-2: 0 6px 16px rgb(0 0 0 / 0.4);
+    --shadow-3: 0 20px 48px rgb(0 0 0 / 0.55);
+    --shadow-page: 0 2px 8px rgb(0 0 0 / 0.45), 0 16px 40px rgb(0 0 0 / 0.45);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1013;
+  --surface: #1b1c20;
+  --surface-2: #25272c;
+  --surface-3: #2e3036;
+  --canvas: #121317;
+  --line: #2b2d33;
+  --line-strong: #3b3e45;
+  --text: #f1f2f4;
+  --text-2: #b3b8c1;
+  --text-3: #7b828d;
+  --brand-soft: #291d44;
+  --brand-soft-2: #36265a;
+  --brand-text: #b58cff;
+  --ok: #2fc58a;
+  --ok-soft: #10281f;
+  --warn: #f0a33a;
+  --warn-soft: #2d2212;
+  --bad: #ff6671;
+  --bad-soft: #2f1619;
+  --scrim: rgb(0 0 0 / 0.6);
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 6px 16px rgb(0 0 0 / 0.4);
+  --shadow-3: 0 20px 48px rgb(0 0 0 / 0.55);
+  --shadow-page: 0 2px 8px rgb(0 0 0 / 0.45), 0 16px 40px rgb(0 0 0 / 0.45);
+}

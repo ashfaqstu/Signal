@@ -1,0 +1,57 @@
+/* Box sizing rules */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin & padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Core body defaults */
+body, html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Set core root defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.4;
+  text-rendering: optimizeSpeed;
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  background-color: var(--bg-app);
+  color: var(--text-1);
+}
+
+/* Inherit fonts for inputs and buttons */
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* Remove list styles on ul, ol elements with a list role */
+ul[role='list'], ol[role='list'] {
+  list-style: none;
+}
+
+/* Make images easier to work with */
+img, picture, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+}

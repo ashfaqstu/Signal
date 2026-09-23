@@ -115,4 +115,24 @@ nothing else changes, and it appears in the matching UI dropdown automatically
 Streamlit. `tests/test_app.py` is the smoke layer: it runs the real app
 through `streamlit.testing.v1.AppTest` for every page and every input source,
 so a refactor inside `spectrasync/` that breaks a screen is caught even
-though the test never looks at pixels.
+though the test never looks at pixels. `tests/test_server.py` tests all
+FastAPI routes, endpoints, layers, and media codecs.
+
+## Web Application Architecture (SpectraSync Studio)
+
+SpectraSync Studio is a Photoshop / Premiere Pro inspired web application for the
+SpectraSync frequency-domain alignment engine.
+
+### Server (`server/`)
+- **FastAPI application** (`server/main.py`) exposing typed JSON API endpoints (`/api/registries`, `/api/media`, `/api/layers`, `/api/run/{workspace}`, `/api/runs/{id}/pixel`, `/api/runs/{id}/export`).
+- **Synchronous computation threadpool**: Run endpoints are synchronous `def` routes so CPU-bound Fourier transforms run safely in FastAPI's background threadpool without blocking the asyncio loop.
+- **In-memory media and layer stores** (`server/media.py`, `server/layers.py`): Zero-copy ndarray caching, LRU-evicted run results, and lazy PNG/JPEG image encoding with byte range and export support.
+- **Dedicated services** (`server/services/`): Pure wrappers mapping workspace inputs directly to `spectrasync` routines without duplicating mathematical logic.
+
+### Frontend (`web/`)
+- **React 18 + TypeScript + Vite**: Built with zero external CSS frameworks, driven by custom design tokens (`web/src/styles/tokens.css`).
+- **Workspaces**: 6 dedicated engineering workspaces (`Align`, `Rotate & Scale`, `Noise Stack`, `Object Removal`, `Defect Highlight`, `Spectrum Lab`).
+- **Interactive Multi-pane Canvas**: Shared viewport synchronization across 1-up, 2-up, 4-up, and split-screen comparison layouts, with subpixel marker overlays, pan/zoom, and pixel inspection probe.
+- **NLE-style Sequence Timeline**: 60fps scrubbing, A/B video sub-sequence selection, per-frame confidence sparklines, and J/K/L keyboard shuttle controls.
+- **Launcher**: `python run_web.py` (production static bundle) and `python run_web.py --dev` (hot reload development mode).
+

@@ -1,0 +1,532 @@
+/* Button */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  border-radius: var(--r-ctl);
+  cursor: pointer;
+  transition: background-color var(--dur) ease-out, border-color var(--dur) ease-out;
+  border: 1px solid transparent;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.btn-sm {
+  height: 20px;
+  padding: 0 8px;
+  font-size: var(--fs-xs);
+}
+
+.btn-md {
+  height: var(--row);
+  padding: 0 12px;
+}
+
+.btn-default {
+  background-color: var(--bg-raised);
+  border-color: var(--line);
+  color: var(--text-1);
+}
+.btn-default:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+}
+
+.btn-primary, .btn-accent {
+  background-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.btn-primary:hover:not(:disabled), .btn-accent:hover:not(:disabled) {
+  opacity: 0.92;
+}
+
+.btn-ghost {
+  background-color: transparent;
+  color: var(--text-2);
+}
+.btn-ghost:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.btnIcon {
+  display: flex;
+  align-items: center;
+  margin-right: 6px;
+}
+
+/* IconButton */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--r-ctl);
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all var(--dur) ease-out;
+  border: 1px solid transparent;
+}
+.iconButton:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+  color: var(--text-1);
+}
+.iconBtn-sm {
+  width: 20px;
+  height: 20px;
+}
+.iconBtn-md {
+  width: var(--row);
+  height: var(--row);
+}
+.iconBtn-tool {
+  width: 32px;
+  height: 32px;
+}
+.iconBtnActive {
+  background-color: var(--bg-hover);
+  color: var(--accent);
+  border-color: var(--line);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: var(--r-ctl);
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badge-default {
+  background-color: var(--bg-hover);
+  color: var(--text-2);
+}
+.badge-ok {
+  background-color: rgba(38, 142, 108, 0.15);
+  color: var(--ok);
+}
+.badge-warn {
+  background-color: rgba(203, 111, 16, 0.15);
+  color: var(--warn);
+}
+.badge-bad {
+  background-color: rgba(215, 55, 63, 0.15);
+  color: var(--bad);
+}
+.badge-accent {
+  background-color: rgba(20, 115, 230, 0.15);
+  color: var(--accent);
+}
+
+/* VerdictChip */
+.verdictChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 6px;
+  border-radius: var(--r-ctl);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border: 1px solid transparent;
+}
+.verdictDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.verdict-ok {
+  background-color: rgba(38, 142, 108, 0.15);
+  color: var(--ok);
+  border-color: rgba(38, 142, 108, 0.3);
+}
+.verdict-ok .verdictDot {
+  background-color: var(--ok);
+}
+.verdict-warn {
+  background-color: rgba(203, 111, 16, 0.15);
+  color: var(--warn);
+  border-color: rgba(203, 111, 16, 0.3);
+}
+.verdict-warn .verdictDot {
+  background-color: var(--warn);
+}
+.verdict-bad {
+  background-color: rgba(215, 55, 63, 0.15);
+  color: var(--bad);
+  border-color: rgba(215, 55, 63, 0.3);
+}
+.verdict-bad .verdictDot {
+  background-color: var(--bad);
+}
+
+/* Checkbox */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--row);
+  cursor: pointer;
+  user-select: none;
+}
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.checkboxBox {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--line);
+  background-color: var(--bg-raised);
+  border-radius: var(--r-ctl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--dur) ease-out;
+  color: var(--accent-text);
+}
+.checkboxChecked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.checkboxText {
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+}
+
+/* Segmented */
+.segmented {
+  display: flex;
+  background-color: var(--bg-app);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  padding: 1px;
+  height: var(--row);
+  gap: 1px;
+}
+.segmentedItem {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-2);
+  border-radius: var(--r-ctl);
+  cursor: pointer;
+  transition: all var(--dur) ease-out;
+  padding: 0 4px;
+}
+.segmentedItem:hover:not(:disabled) {
+  color: var(--text-1);
+}
+.segmentedItemSelected {
+  background-color: var(--bg-raised);
+  color: var(--text-1);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Select */
+.selectWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--row);
+  gap: 8px;
+}
+.fieldLabel {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.selectContainer {
+  position: relative;
+  flex: 1;
+  height: var(--row);
+  max-width: 170px;
+}
+.select {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  padding: 0 20px 0 8px;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  appearance: none;
+  cursor: pointer;
+}
+.selectChevron {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-3);
+}
+
+/* ScrubField */
+.scrubWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--row);
+  gap: 8px;
+}
+.scrubLabel {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+  cursor: ew-resize;
+  user-select: none;
+  white-space: nowrap;
+}
+.scrubLabel:hover {
+  color: var(--accent);
+}
+.scrubFieldBox {
+  flex: 1;
+  max-width: 170px;
+  height: var(--row);
+  display: flex;
+  align-items: center;
+}
+.scrubInput {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-ctl);
+  padding: 0 6px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  text-align: right;
+}
+.scrubValue {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  padding: 0 6px;
+  font-size: var(--fs-sm);
+  color: var(--text-1);
+  cursor: text;
+}
+.scrubValue:hover {
+  border-color: var(--text-3);
+}
+.fieldUnit {
+  margin-left: 4px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+
+/* MediaSlot */
+.mediaSlotContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.mediaSlotWrapper {
+  position: relative;
+}
+.mediaSlot {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-raised);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-ctl);
+  padding: 2px 6px;
+  cursor: pointer;
+  gap: 6px;
+  transition: border-color var(--dur);
+}
+.mediaSlot:hover {
+  border-color: var(--accent);
+}
+.mediaSlotFilled {
+  border-style: solid;
+}
+.mediaSlotThumb {
+  width: 22px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 1px;
+}
+.mediaSlotName {
+  flex: 1;
+  font-size: var(--fs-xs);
+  color: var(--text-1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mediaSlotClear {
+  color: var(--text-3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.mediaSlotClear:hover {
+  color: var(--bad);
+}
+.mediaSlotEmpty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.mediaSlotIcon {
+  color: var(--text-3);
+}
+
+/* MultiSlot */
+.multiSlotHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.multiSlotCount {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.mediaMultiSlot {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--bg-raised);
+  border: 1px dashed var(--line);
+  border-radius: var(--r-ctl);
+  padding: 2px 6px;
+  cursor: pointer;
+}
+.multiSlotThumbs {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.multiThumbItem {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 1px;
+}
+.multiThumbExtra {
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  margin-left: 2px;
+}
+
+/* MediaPicker Popover */
+.mediaPickerPopover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 260px;
+  max-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+.mediaPickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-2);
+}
+.mediaPickerClose {
+  color: var(--text-3);
+  cursor: pointer;
+}
+.mediaPickerClose:hover {
+  color: var(--text-1);
+}
+.mediaPickerList {
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mediaPickerGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mediaPickerGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-3);
+}
+.groupSelectBtn {
+  font-size: 10px;
+  color: var(--accent);
+  cursor: pointer;
+}
+.mediaPickerGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.mediaPickerItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  cursor: pointer;
+  background-color: var(--bg-app);
+}
+.mediaPickerItem:hover {
+  border-color: var(--accent);
+}
+.mediaPickerItemSelected {
+  border-color: var(--accent);
+  background-color: rgba(20, 115, 230, 0.1);
+}
+.mediaPickerItemThumb {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 1px;
+}
+.mediaPickerItemName {
+  font-size: 10px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}

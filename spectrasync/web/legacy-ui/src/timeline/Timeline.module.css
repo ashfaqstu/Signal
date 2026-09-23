@@ -1,0 +1,196 @@
+.timelineContainer {
+  height: 120px;
+  background-color: var(--bg-panel);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.timelineHeader {
+  height: 28px;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+}
+
+.transportContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.transportButtons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.timecodeDisplay {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  padding: 0 8px;
+}
+
+.timecodeCurrent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.timecodeSep {
+  color: var(--text-3);
+}
+
+.timecodeTotal {
+  color: var(--text-3);
+}
+
+.fpsSelector {
+  margin-left: auto;
+}
+
+.timelineBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.confidenceTrack {
+  height: 8px;
+  display: flex;
+  background-color: var(--bg-app);
+  border-bottom: 1px solid var(--line);
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.confidenceSegment {
+  width: 60px;
+  height: 100%;
+  border-radius: 1px;
+}
+
+.filmstripContainer {
+  flex: 1;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 8px;
+  background-color: var(--bg-app);
+}
+
+.filmstripWrapper {
+  display: flex;
+  height: 100%;
+}
+
+.filmstripTrack {
+  display: flex;
+  gap: 4px;
+  height: 100%;
+}
+
+.filmstripItem {
+  position: relative;
+  width: 60px;
+  height: 100%;
+  background-color: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color var(--dur);
+}
+.filmstripItem:hover {
+  border-color: var(--text-2);
+}
+.filmstripItemSelected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.filmThumb {
+  width: 100%;
+  flex: 1;
+  object-fit: cover;
+}
+
+.filmThumbPlaceholder {
+  width: 100%;
+  flex: 1;
+  background-color: var(--bg-hover);
+}
+
+.frameNumber {
+  font-size: 9px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  padding: 1px 0;
+}
+
+.abMarkersContainer {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  gap: 2px;
+}
+
+.markerFlag {
+  width: 14px;
+  height: 14px;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.markerActiveA {
+  background-color: var(--accent);
+}
+.markerActiveB {
+  background-color: var(--ok);
+}
+
+/* Playhead */
+.playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--accent);
+  pointer-events: all;
+  cursor: ew-resize;
+  z-index: 30;
+}
+
+.playheadHead {
+  position: absolute;
+  top: 0;
+  left: -4px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 60%, 50% 100%, 0 60%);
+}
+
+.playheadLine {
+  width: 1px;
+  height: 100%;
+  background-color: var(--accent);
+}

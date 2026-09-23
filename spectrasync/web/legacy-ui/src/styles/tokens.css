@@ -1,0 +1,74 @@
+:root {
+  --font-ui: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, monospace;
+  --fs-xs: 11px;
+  --fs-sm: 12px;
+  --fs-md: 13px;
+  --fs-lg: 15px;
+  --row: 24px;
+  --header: 28px;
+  --appbar: 32px;
+  --status: 24px;
+  --toolbar: 40px;
+  --r-ctl: 2px;
+  --r-pop: 4px;
+  --dur: 120ms;
+}
+
+/* LIGHT (Photoshop "lightest" UI) */
+:root, :root[data-theme="light"] {
+  --bg-app:     #E8E8E8;  /* chrome behind panels */
+  --bg-panel:   #F5F5F5;  /* panel surfaces */
+  --bg-raised:  #FFFFFF;  /* fields, menus, cards */
+  --bg-hover:   #E1E1E1;
+  --pasteboard: #D4D4D4;  /* area around the image */
+  --line:       #CACACA;  /* 1px dividers */
+  --text-1:     #222222;
+  --text-2:     #505050;
+  --text-3:     #8A8A8A;
+  --accent:     #1473E6;
+  --accent-text:#FFFFFF;
+  --ok:         #268E6C;
+  --warn:       #CB6F10;
+  --bad:        #D7373F;
+  --shadow-pop: 0 4px 16px rgb(0 0 0 / .18);
+}
+
+/* DARK (Photoshop "darkest" UI) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg-app:     #1B1B1B;
+    --bg-panel:   #262626;
+    --bg-raised:  #323232;
+    --bg-hover:   #3A3A3A;
+    --pasteboard: #141414;
+    --line:       #3E3E3E;
+    --text-1:     #E6E6E6;
+    --text-2:     #B3B3B3;
+    --text-3:     #7A7A7A;
+    --accent:     #378EF0;
+    --accent-text:#FFFFFF;
+    --ok:         #2D9D78;
+    --warn:       #E68619;
+    --bad:        #E34850;
+    --shadow-pop: 0 4px 16px rgb(0 0 0 / .5);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg-app:     #1B1B1B;
+  --bg-panel:   #262626;
+  --bg-raised:  #323232;
+  --bg-hover:   #3A3A3A;
+  --pasteboard: #141414;
+  --line:       #3E3E3E;
+  --text-1:     #E6E6E6;
+  --text-2:     #B3B3B3;
+  --text-3:     #7A7A7A;
+  --accent:     #378EF0;
+  --accent-text:#FFFFFF;
+  --ok:         #2D9D78;
+  --warn:       #E68619;
+  --bad:        #E34850;
+  --shadow-pop: 0 4px 16px rgb(0 0 0 / .5);
+}

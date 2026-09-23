@@ -1,0 +1,246 @@
+.viewerContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--pasteboard);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.viewerHeader {
+  height: var(--header);
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  z-index: 10;
+}
+
+.documentTabs {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  gap: 1px;
+}
+
+.docTab {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  height: 100%;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  border-right: 1px solid var(--line);
+  cursor: pointer;
+  background-color: var(--bg-app);
+  white-space: nowrap;
+  transition: all var(--dur);
+}
+.docTab:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-1);
+}
+.docTabActive {
+  background-color: var(--bg-panel);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.headerRightControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.splitSelects {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.splitSep {
+  color: var(--text-3);
+}
+
+.layoutSwitch {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-app);
+  border: 1px solid var(--line);
+  border-radius: var(--r-ctl);
+  padding: 1px;
+  gap: 1px;
+}
+
+.pasteboard {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--pasteboard);
+  display: flex;
+}
+
+/* Panes */
+.pane {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--pasteboard);
+  cursor: grab;
+  outline: none;
+}
+.pane:active {
+  cursor: grabbing;
+}
+
+.fullPane {
+  width: 100%;
+  height: 100%;
+}
+
+.twoUpGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background-color: var(--line);
+  width: 100%;
+  height: 100%;
+}
+
+.fourUpGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  background-color: var(--line);
+  width: 100%;
+  height: 100%;
+}
+
+.imageTransformWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+.layerImage {
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.placeholderBox {
+  background-color: var(--bg-app);
+}
+
+.paneOverlayTag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Split Compare */
+.splitPane {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.splitClipLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.splitClipRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.splitDivider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: var(--accent);
+  cursor: ew-resize;
+  z-index: 20;
+}
+
+.splitHandle {
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%);
+  width: 11px;
+  height: 24px;
+  background-color: var(--accent);
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.splitLeftTag {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.splitRightTag {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background-color: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+/* Empty & Error states */
+.emptyState {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.emptyStateText {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.5px;
+}

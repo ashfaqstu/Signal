@@ -1,0 +1,54 @@
+.stageStrip {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--line);
+  user-select: none;
+}
+
+.stageTabs {
+  display: flex;
+  overflow-x: auto;
+  height: 28px;
+  background-color: var(--bg-app);
+  border-bottom: 1px solid var(--line);
+}
+
+.stageTab {
+  padding: 0 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  color: var(--text-2);
+  border-right: 1px solid var(--line);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--dur) ease-out;
+}
+
+.stageTab:hover {
+  background-color: var(--bg-hover);
+  color: var(--text-1);
+}
+
+.stageTabActive {
+  background-color: var(--bg-panel);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.formulaBar {
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-panel);
+  min-height: 32px;
+}
+
+.formulaContent {
+  color: var(--text-1);
+  font-size: var(--fs-md);
+}
