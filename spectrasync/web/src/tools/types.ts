@@ -64,6 +64,10 @@ export interface ToolDef {
   defaultSource: Source;
   /** Media group used by "Sample" (see server/config.py SAMPLES). */
   sampleGroup: string;
+  /** Media group for the "Simulate" preview thumbnail's base photo, when no
+   * media has been explicitly picked (see server/config.py SAMPLES). Falls
+   * back to `sampleGroup` when omitted. */
+  baseGroup?: string;
   acceptsVideo: boolean;
   minFiles: number;
   defaults: Params;

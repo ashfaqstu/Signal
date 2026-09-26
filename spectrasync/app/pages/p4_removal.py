@@ -7,8 +7,9 @@ import spectrasync as ss
 from app import components as C
 from app.registry import page
 
-#: Photos of one scene with people walking through it. Used when nothing is uploaded.
-SAMPLE_SET = "new_image/1/*.jpg"
+#: Photos of one scene with people walking through it. Used when nothing is
+#: uploaded. See media/README.md to swap this default for your own set.
+SAMPLE_SET = "media/04_object_removal/burst/*.jpg"
 
 
 @page("Object Removal", order=40, icon="4.",
@@ -38,7 +39,7 @@ def render():
                 sample_glob=SAMPLE_SET, max_side=max_side, gray=not colour)
         elif source == "Synthetic":
             base, _ = C.image_uploader("Background", "rm_base",
-                                       sample="data/raw/photo_b.jpg")
+                                       sample="media/04_object_removal/base.jpg")
             n = st.slider("frames", 4, 24, 12, 1)
             radius = st.slider("object radius (px)", 6, 60, 26, 2)
             noise = st.slider("noise sigma", 0.0, 0.2, 0.01, 0.005)
@@ -59,12 +60,12 @@ def render():
         if len(photos) < 3:
             st.info("Upload three or more photos of the same scene - camera "
                     "roughly still, people free to move - or put some in "
-                    "new_image/1/.")
+                    "media/04_object_removal/burst/.")
             return
         frames = photos
     elif source == "Synthetic":
         if base is None:
-            st.warning("Upload a background, or put photo_b.jpg in data/raw/.")
+            st.warning("Upload a background, or put one in media/04_object_removal/base.jpg.")
             return
         img = ss.even_square(base, max_side=384)
         src = ss.SyntheticSource(img, n=n, max_shift=shift, noise=noise,

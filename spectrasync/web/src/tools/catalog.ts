@@ -110,9 +110,10 @@ const align: ToolDef = {
   icon: Crosshair,
   gradient: "var(--tool-align)",
   input: "pair",
-  sources: ["simulate", "files"],
+  sources: ["simulate", "sample", "files"],
   defaultSource: "simulate",
-  sampleGroup: "Base",
+  sampleGroup: "Pair · translation",
+  baseGroup: "Base · translation",
   acceptsVideo: true,
   minFiles: 2,
   defaults: {
@@ -171,6 +172,7 @@ const rotate: ToolDef = {
   sources: ["sample", "files", "simulate"],
   defaultSource: "sample",
   sampleGroup: "Pair · rotated",
+  baseGroup: "Base · rotation & scale",
   acceptsVideo: true,
   minFiles: 2,
   defaults: {
@@ -229,6 +231,7 @@ const stack: ToolDef = {
   sources: ["sample", "files", "simulate"],
   defaultSource: "sample",
   sampleGroup: "Burst · noisy",
+  baseGroup: "Base · stacking",
   acceptsVideo: true,
   minFiles: 2,
   defaults: {
@@ -291,7 +294,8 @@ const remove: ToolDef = {
   input: "sequence",
   sources: ["sample", "files", "simulate"],
   defaultSource: "sample",
-  sampleGroup: "Crowd",
+  sampleGroup: "Crowd · object removal",
+  baseGroup: "Base · object removal",
   acceptsVideo: true,
   minFiles: 3,
   defaults: {
@@ -349,7 +353,8 @@ const highlight: ToolDef = {
   input: "sequence",
   sources: ["sample", "files", "simulate"],
   defaultSource: "sample",
-  sampleGroup: "Crowd",
+  sampleGroup: "Crowd · highlight",
+  baseGroup: "Base · highlight",
   acceptsVideo: true,
   minFiles: 3,
   defaults: {
@@ -414,7 +419,7 @@ const spectrum: ToolDef = {
   input: "single",
   sources: ["sample", "files"],
   defaultSource: "sample",
-  sampleGroup: "Base",
+  sampleGroup: "Base · theory",
   acceptsVideo: false,
   minFiles: 1,
   defaults: { dy: 12, dx: -8 },

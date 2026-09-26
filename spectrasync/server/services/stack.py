@@ -13,8 +13,8 @@ from .align import ServiceResult
 from .common import get_base_image, load_sequence
 from .. import config
 
-SAMPLE_SET = "new_image/2_noisy/set_1/*.jpg"
-SAMPLE_CLEAN = "new_image/2_noisy/_clean/set_1.png"
+SAMPLE_SET = "media/03_stacking/burst/*.jpg"
+SAMPLE_CLEAN = "media/03_stacking/clean_reference.png"
 COMPARE = ["mean", "median", "sigma_clip", "trimmed_mean", "fourier_snr"]
 
 
@@ -23,7 +23,7 @@ def run_stack(params: StackParams, media: MediaStore) -> ServiceResult:
     clean = None
 
     if params.source == "synthetic":
-        base = get_base_image(params.base_id, media)
+        base = get_base_image(params.base_id, media, fallback="media/03_stacking/base.jpg")
         img = ss.even_square(base, max_side=384)
         src = ss.SyntheticSource(
             img,

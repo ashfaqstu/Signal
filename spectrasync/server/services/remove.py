@@ -10,14 +10,14 @@ from ..media import MediaStore
 from .align import ServiceResult
 from .common import get_base_image, load_sequence
 
-SAMPLE_SET = "new_image/1/*.jpg"
+SAMPLE_SET = "media/04_object_removal/burst/*.jpg"
 
 
 def run_remove(params: RemoveParams, media: MediaStore) -> ServiceResult:
     truth, pad = None, 0
 
     if params.source == "synthetic":
-        base = get_base_image(params.base_id, media)
+        base = get_base_image(params.base_id, media, fallback="media/04_object_removal/base.jpg")
         img = ss.even_square(base, max_side=384)
         src = ss.SyntheticSource(
             img,

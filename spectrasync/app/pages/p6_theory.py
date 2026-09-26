@@ -43,14 +43,14 @@ def render():
     with st.sidebar:
         st.markdown("### Data")
         base, _ = C.image_uploader("Image", "th_base",
-                                   sample="data/raw/photo_b.jpg")
+                                   sample="media/06_theory/base.jpg")
         dy = st.slider("dy (px)", -30.0, 30.0, 12.0, 0.5)
         dx = st.slider("dx (px)", -30.0, 30.0, -8.0, 0.5)
         st.markdown("### Stage")
         i = st.slider("stage", 1, len(STAGES), 1) - 1
 
     if base is None:
-        st.warning("Upload an image, or put photo_b.jpg in data/raw/.")
+        st.warning("Upload an image, or put one in media/06_theory/base.jpg.")
         return
 
     ref = ss.even_square(base, max_side=320)

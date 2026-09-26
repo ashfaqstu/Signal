@@ -30,7 +30,7 @@ def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
     truth = None
 
     if params.source == "synthetic":
-        base = get_base_image(params.base_id, media)
+        base = get_base_image(params.base_id, media, fallback="media/01_translation/base.jpg")
         ref = ss.even_square(base)
         mov = ss.fourier_shift(ref, params.dy, params.dx)
         if params.noise > 0:
@@ -53,7 +53,7 @@ def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
             media,
             max_side=768,
             gray=True,
-            sample_glob="data/raw/photo_b.jpg",
+            sample_glob="media/01_translation/pair/*.jpg",
         )
 
     mask = ss.lowpass(ref.shape, params.lowpass) if params.lowpass > 0 else None

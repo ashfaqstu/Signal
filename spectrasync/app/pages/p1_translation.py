@@ -17,14 +17,15 @@ def render():
                        key="t_src")
         if src == "Synthetic pair":
             base, _ = C.image_uploader("Base image (optional)", "t_base",
-                                       sample="data/raw/photo_b.jpg")
+                                       sample="media/01_translation/base.jpg")
             dy = st.slider("true dy (px)", -40.0, 40.0, 12.5, 0.5)
             dx = st.slider("true dx (px)", -40.0, 40.0, -7.5, 0.5)
             noise = st.slider("noise sigma", 0.0, 0.4, 0.0, 0.01)
         else:
             base = None
-            ref_img, _ = C.image_uploader("Reference", "t_ref")
-            mov_img, _ = C.image_uploader("Moved", "t_mov")
+            photos, _ = C.pair_uploader(
+                ["Reference", "Moved"], "t_pair",
+                sample_glob="media/01_translation/pair/*.jpg", gray=True)
 
         st.markdown("### Method")
         window = C.registry_select(ss.WINDOWS, "Window", "hann", "t_win")
@@ -42,7 +43,7 @@ def render():
 
     if src == "Synthetic pair":
         if base is None:
-            st.warning("Upload a base image, or put photo_b.jpg in data/raw/.")
+            st.warning("Upload a base image, or put one in media/01_translation/base.jpg.")
             return
         ref = ss.even_square(base)
         mov = ss.fourier_shift(ref, dy, dx)
@@ -50,10 +51,11 @@ def render():
             ref, mov = ss.add_noise(ref, noise), ss.add_noise(mov, noise)
         truth = (dy, dx)
     else:
-        if ref_img is None or mov_img is None:
-            st.info("Upload both images to begin.")
+        if len(photos) < 2:
+            st.info("Upload both images to begin, or put a pair in "
+                    "media/01_translation/pair/.")
             return
-        ref, mov = ss.match_shapes(ref_img, mov_img)
+        ref, mov = ss.match_shapes(photos[0], photos[1])
         truth = None
 
     mask = ss.lowpass(ref.shape, lp) if lp > 0 else None

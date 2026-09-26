@@ -19,12 +19,12 @@ interface Start {
 }
 
 const STARTS: Start[] = [
-  { tool: "remove", title: "Erase passers-by", group: "Crowd", pick: 0 },
+  { tool: "remove", title: "Erase passers-by", group: "Crowd · object removal", pick: 0 },
   { tool: "stack", title: "Clean a noisy burst", group: "Burst · noisy", pick: 0 },
-  { tool: "highlight", title: "Spot moving people", group: "Crowd", pick: 5 },
+  { tool: "highlight", title: "Spot moving people", group: "Crowd · highlight", pick: 5 },
   { tool: "rotate", title: "Straighten a pair", group: "Pair · rotated", pick: 1 },
-  { tool: "align", title: "Align a shifted shot", group: "Base", pick: 0, simulate: true },
-  { tool: "spectrum", title: "Explore the spectrum", group: "Base", pick: 0 },
+  { tool: "align", title: "Align a shifted shot", group: "Base · translation", pick: 0, simulate: true },
+  { tool: "spectrum", title: "Explore the spectrum", group: "Base · theory", pick: 0 },
 ];
 
 export function startTool(tool: ToolId, simulate = false) {

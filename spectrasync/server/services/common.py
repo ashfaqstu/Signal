@@ -10,19 +10,25 @@ from .. import config
 from ..media import MediaStore
 
 
-def get_base_image(base_id: str | None, media: MediaStore, max_side: int | None = None) -> np.ndarray:
-    """Retrieve base image array from media ID or fallback to sample photo_b.jpg."""
+def get_base_image(base_id: str | None, media: MediaStore, max_side: int | None = None,
+                   fallback: str = "media/01_translation/base.jpg") -> np.ndarray:
+    """Retrieve base image array from media ID, or fall back to a sample file.
+
+    `fallback` is a path relative to the repo root and is workspace-specific --
+    each service passes its OWN `media/<workspace>/base.jpg`, so changing one
+    tool's default sample never affects another's. See `media/README.md`.
+    """
     if base_id:
         m = media.get(base_id)
         if m and m.path.exists():
             return ss.load_gray(m.path, max_side=max_side)
-    
-    # Fallback to sample
-    fallback = config.ROOT / "data" / "raw" / "photo_b.jpg"
-    if fallback.exists():
-        return ss.load_gray(fallback, max_side=max_side)
-    
-    raise ValueError("Base image not found. Please provide an image or place photo_b.jpg in data/raw/.")
+
+    path = Path(fallback)
+    full = path if path.is_absolute() else config.ROOT / path
+    if full.exists():
+        return ss.load_gray(full, max_side=max_side)
+
+    raise ValueError(f"Base image not found. Please provide an image or place one at {fallback}.")
 
 
 def load_pair(

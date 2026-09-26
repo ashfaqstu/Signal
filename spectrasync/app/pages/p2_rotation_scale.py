@@ -9,7 +9,7 @@ from app.registry import page
 
 #: Photos of one scene taken at slightly different angles. The first two are
 #: used when nothing is uploaded.
-SAMPLE_PAIR = "new_image/3/*.jpg"
+SAMPLE_PAIR = "media/02_rotation_scale/pair/*.jpg"
 
 
 @page("Rotation & Scale", order=20, icon="2.",
@@ -33,7 +33,7 @@ def render():
                 sample_glob=SAMPLE_PAIR, max_side=max_side)
         else:
             base, _ = C.image_uploader("Base image", "rs_base",
-                                       sample="data/raw/photo_b.jpg")
+                                       sample="media/02_rotation_scale/base.jpg")
             angle = st.slider("true rotation (deg)", -180.0, 180.0, 20.0, 1.0)
             scale = st.slider("true scale", 0.70, 2.00, 1.20, 0.01)
             tdy = st.slider("true dy (px)", -30.0, 30.0, 9.0, 1.0)
@@ -53,7 +53,7 @@ def render():
     if source == "Two photos":
         if len(photos) < 2:
             st.info("Upload a reference photo and a rotated / scaled photo of "
-                    "the same scene, or put two photos in new_image/3/.")
+                    "the same scene, or put them in media/02_rotation_scale/pair/.")
             return
         ref_c, mov_c = (ss.to_even(p) for p in photos)
         ref_full, mov_full = ss.to_gray(ref_c), ss.to_gray(mov_c)
@@ -62,7 +62,7 @@ def render():
         labels = (f"reference — {names[0]}", f"second photo — {names[1]}")
     else:
         if base is None:
-            st.warning("Upload an image, or put photo_b.jpg in data/raw/.")
+            st.warning("Upload an image, or put one in media/02_rotation_scale/base.jpg.")
             return
         ref = ss.even_square(base, max_side=384)
         mov = ss.warp_similarity(ref, angle, scale, tdy, tdx)

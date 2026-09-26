@@ -10,7 +10,7 @@ from ..media import MediaStore
 from .align import ServiceResult
 from .common import get_base_image, load_sequence, frame_pair_from_video
 
-SAMPLE_PAIR = "new_image/3/*.jpg"
+SAMPLE_PAIR = "media/02_rotation_scale/pair/*.jpg"
 
 
 def run_rotate(params: RotateParams, media: MediaStore) -> ServiceResult:
@@ -41,7 +41,7 @@ def run_rotate(params: RotateParams, media: MediaStore) -> ServiceResult:
         ref_full, mov_full = ss.to_gray(ref_c), ss.to_gray(mov_c)
         ref, mov = ss.centre_square(ref_full), ss.centre_square(mov_full)
     else:  # synthetic
-        base = get_base_image(params.base_id, media)
+        base = get_base_image(params.base_id, media, fallback="media/02_rotation_scale/base.jpg")
         ref = ss.even_square(base, max_side=384)
         mov = ss.warp_similarity(ref, params.angle, params.scale, params.dy, params.dx)
         if params.noise > 0:

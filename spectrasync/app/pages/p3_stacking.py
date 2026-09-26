@@ -9,9 +9,10 @@ import spectrasync as ss
 from app import components as C
 from app.registry import page
 
-#: A burst of noisy frames made by tools/make_noisy_set.py from new_image/2.
-SAMPLE_SET = "new_image/2_noisy/set_1/*.jpg"
-SAMPLE_CLEAN = "new_image/2_noisy/_clean/set_1.png"
+#: A burst of noisy frames made by tools/make_noisy_set.py. See media/README.md
+#: to swap this default for your own set.
+SAMPLE_SET = "media/03_stacking/burst/*.jpg"
+SAMPLE_CLEAN = "media/03_stacking/clean_reference.png"
 COMPARE = ["mean", "median", "sigma_clip", "trimmed_mean", "fourier_snr"]
 
 
@@ -40,7 +41,7 @@ def render():
                                         type=C.IMAGE_TYPES, key="st_clean")
         else:
             base, _ = C.image_uploader("Base image", "st_base",
-                                       sample="data/raw/photo_b.jpg")
+                                       sample="media/03_stacking/base.jpg")
             n = st.slider("frames", 2, 32, 16, 1)
             noise = st.slider("noise sigma", 0.0, 0.4, 0.12, 0.01)
             shift = st.slider("max shift (px)", 0.0, 15.0, 5.0, 0.5)
@@ -54,7 +55,7 @@ def render():
 
     if source == "Synthetic":
         if base is None:
-            st.warning("Upload an image, or put photo_b.jpg in data/raw/.")
+            st.warning("Upload an image, or put one in media/03_stacking/base.jpg.")
             return
         _synthetic(base, n, noise, shift, reducer, do_align, compare)
         return

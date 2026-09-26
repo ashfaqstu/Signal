@@ -13,7 +13,7 @@ from .common import get_base_image
 
 
 def run_spectrum(params: SpectrumParams, media: MediaStore) -> ServiceResult:
-    base = get_base_image(params.base_id, media, max_side=320)
+    base = get_base_image(params.base_id, media, max_side=320, fallback="media/06_theory/base.jpg")
     ref = ss.even_square(base, max_side=320)
     mov = ss.fourier_shift(ref, params.dy, params.dx)
 

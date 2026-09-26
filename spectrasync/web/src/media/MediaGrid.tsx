@@ -6,11 +6,18 @@ import { Button, cx } from "../ui";
 import s from "./MediaGrid.module.css";
 
 const SAMPLE_NAMES: Record<string, string> = {
-  Base: "Photo",
+  "Base · translation": "Photo",
+  "Pair · translation": "Shifted pair",
+  "Base · rotation & scale": "Photo",
   "Pair · rotated": "Rotated pair",
+  "Base · stacking": "Photo",
   "Burst · noisy": "Noisy burst",
   "Burst · clean ref": "Clean reference",
-  Crowd: "Crowd",
+  "Base · object removal": "Photo",
+  "Crowd · object removal": "Crowd",
+  "Base · highlight": "Photo",
+  "Crowd · highlight": "Crowd",
+  "Base · theory": "Photo",
 };
 
 export const groupName = (g: string) => SAMPLE_NAMES[g] ?? g;

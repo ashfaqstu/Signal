@@ -10,12 +10,12 @@ from ..media import MediaStore
 from .align import ServiceResult
 from .common import get_base_image, load_sequence
 
-SAMPLE_SET = "new_image/1/*.jpg"
+SAMPLE_SET = "media/05_highlight/burst/*.jpg"
 
 
 def run_highlight(params: HighlightParams, media: MediaStore) -> ServiceResult:
     if params.source == "synthetic":
-        base = get_base_image(params.base_id, media)
+        base = get_base_image(params.base_id, media, fallback="media/05_highlight/base.jpg")
         img = ss.even_square(base, max_side=384)
         src = ss.SyntheticSource(
             img,

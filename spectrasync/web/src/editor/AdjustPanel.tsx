@@ -104,7 +104,7 @@ function InputPreview({ tool, ctx, onChoose }: { tool: ToolDef; ctx: ControlCont
     sub = items.length > 1 ? `${items.length} photos` : "Sample";
   } else if (input.source === "simulate") {
     const base = media.find((m) => m.id === input.mediaIds[0] && m.kind === "image");
-    items = base ? [base] : media.filter((m) => m.group === "Base");
+    items = base ? [base] : media.filter((m) => m.group === (tool.baseGroup ?? tool.sampleGroup));
     name = "Simulated";
     sub = `from ${items[0]?.name ?? "sample photo"}`;
   } else {
