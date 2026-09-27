@@ -72,7 +72,7 @@ def test_run_align_synthetic(client: TestClient):
     layer_names = [l["name"] for l in data["layers"]]
     assert "A" in layer_names
     assert "B" in layer_names
-    assert "B aligned" in layer_names
+    assert "B restored" in layer_names
     assert "Overlay" in layer_names
     assert "|F₁|" in layer_names
     assert "r(x,y)" in layer_names

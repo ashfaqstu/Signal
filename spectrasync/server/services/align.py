@@ -27,35 +27,38 @@ class ServiceResult:
 
 
 def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
+    """Measure on luma, show in colour -- the same UX as the rotate service."""
     truth = None
 
     if params.source == "synthetic":
-        base = get_base_image(params.base_id, media, fallback="media/01_translation/base.jpg")
-        ref = ss.even_square(base)
-        mov = ss.fourier_shift(ref, params.dy, params.dx)
+        base = get_base_image(params.base_id, media, fallback="media/01_translation/base.jpg",
+                              colour=True)
+        ref_c = ss.even_square(base, max_side=min(params.max_side, 512))
+        mov_c = ss.fourier_shift(ref_c, params.dy, params.dx)
         if params.noise > 0:
-            ref = ss.add_noise(ref, params.noise)
-            mov = ss.add_noise(mov, params.noise)
+            ref_c = ss.add_noise(ref_c, params.noise)
+            mov_c = ss.add_noise(mov_c, params.noise)
         truth = (params.dy, params.dx)
     elif params.source == "video":
-        ref, mov, _ = frame_pair_from_video(
+        ref_c, mov_c, _ = frame_pair_from_video(
             params.media_id,
             params.a_index,
             params.b_index,
             media,
-            max_side=768,
-            gray=True,
+            max_side=params.max_side,
+            gray=False,
         )
     else:  # pair
-        ref, mov, _ = load_pair(
+        ref_c, mov_c, _ = load_pair(
             params.a_id,
             params.b_id,
             media,
-            max_side=768,
-            gray=True,
+            max_side=params.max_side,
+            gray=False,
             sample_glob="media/01_translation/pair/*.jpg",
         )
 
+    ref, mov = ss.to_gray(ref_c), ss.to_gray(mov_c)
     mask = ss.lowpass(ref.shape, params.lowpass) if params.lowpass > 0 else None
     r = ss.phase_correlation(
         ref,
@@ -66,8 +69,11 @@ def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
         spectral_mask=mask,
     )
 
-    aligned = ss.apply_registration(mov, 0.0, 1.0, r.dy, r.dx)
+    aligned_c = ss.apply_registration(mov_c, 0.0, 1.0, r.dy, r.dx)
+    aligned = ss.to_gray(aligned_c)
     valid = ss.alignment_valid_mask(ref.shape, 0.0, 1.0, r.dy, r.dx)
+    vm = valid[..., None] if aligned_c.ndim == 3 else valid
+    b_restored = np.where(vm, aligned_c, 0.0)
 
     ov_fn = ss.OVERLAYS[params.overlay] if params.overlay in ss.OVERLAYS else ss.OVERLAYS["anaglyph"]
     kw = (
@@ -75,16 +81,8 @@ def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
         if params.overlay == "checkerboard"
         else ({"alpha": params.alpha} if params.overlay == "blend" else {})
     )
-    overlay_img = ov_fn(ref, aligned, **kw)
     overlay_before = ov_fn(ref, mov, **kw)
-
-    diff_before = ss.difference(ref, mov) * valid
-    diff_after = ss.difference(ref, aligned) * valid
-    # Display only: put both differences on ONE brightness scale (RGB, so the
-    # encoder clips instead of stretching each one to its own min/max).
-    scale = max(float(diff_before.max()), 1e-9)
-    diff_before_img = np.repeat((diff_before / scale)[..., None], 3, axis=-1)
-    diff_after_img = np.repeat((diff_after / scale)[..., None], 3, axis=-1)
+    overlay_img = ov_fn(ref, aligned, **kw) * (valid[..., None] if params.overlay == "anaglyph" else valid)
     psnr_before = ss.psnr(ref, mov, valid)
     psnr_after = ss.psnr(ref, aligned, valid)
 
@@ -121,13 +119,11 @@ def run_align(params: AlignParams, media: MediaStore) -> ServiceResult:
     flags = ["inverted_contrast"] if r.stats.polarity < 0 else []
 
     layers = [
-        ("A", "Input", "image", ref, "inferno"),
-        ("B", "Input", "image", mov, "inferno"),
-        ("B aligned", "Result", "image", aligned, "inferno"),
-        ("Overlay before", "Result", "image", overlay_before, "inferno"),
-        ("Overlay", "Result", "image", overlay_img, "inferno"),
-        ("Δ before", "Analysis", "image", diff_before_img, "inferno"),
-        ("Δ after", "Analysis", "image", diff_after_img, "inferno"),
+        ("A", "Input", "image", ref_c, "inferno"),
+        ("B", "Input", "image", mov_c, "inferno"),
+        ("B restored", "Result", "image", b_restored, "inferno"),
+        ("Overlay before", "Analysis", "image", overlay_before, "inferno"),
+        ("Overlay", "Analysis", "image", overlay_img, "inferno"),
         ("|F₁|", "Frequency", "heatmap", f1_log, "inferno"),
         ("|F₂|", "Frequency", "heatmap", f2_log, "inferno"),
         ("∠R", "Frequency", "heatmap", r_phase, "twilight"),

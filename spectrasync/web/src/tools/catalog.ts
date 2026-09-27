@@ -110,14 +110,14 @@ const align: ToolDef = {
   icon: Crosshair,
   gradient: "var(--tool-align)",
   input: "pair",
-  sources: ["simulate", "sample", "files"],
-  defaultSource: "simulate",
+  sources: ["sample", "files", "simulate"],
+  defaultSource: "sample",
   sampleGroup: "Pair · translation",
   baseGroup: "Base · translation",
   acceptsVideo: true,
   minFiles: 2,
   defaults: {
-    dy: 12.5, dx: -7.5, noise: 0, window: "hann", subpixel: "parabolic", beta: 1, lowpass: 0,
+    maxSide: 768, dy: 12.5, dx: -7.5, noise: 0, window: "hann", subpixel: "parabolic", beta: 1, lowpass: 0,
     overlay: "anaglyph", tile: 32, alpha: 0.5, aIndex: 0, bIndex: 1,
   },
   simulate: [
@@ -139,11 +139,12 @@ const align: ToolDef = {
     { key: "subpixel", label: "Sub-pixel", kind: "registry", registry: "subpixel" },
     { key: "beta", label: "Magnitude β", kind: "slider", min: 0, max: 1, step: 0.05, digits: 2 },
     { key: "lowpass", label: "Low-pass", kind: "slider", min: 0, max: 0.5, step: 0.01, digits: 2 },
+    sizeCtl(1280),
   ],
   views: [
     { id: "compare", label: "Before / After", type: "compare", before: "Overlay before", after: "Overlay" },
-    { id: "diff", label: "Difference", type: "compare", before: "Δ before", after: "Δ after" },
-    { id: "images", label: "Images", type: "grid", layers: ["A", "B", "B aligned"] },
+    { id: "restored", label: "Restored", type: "single", layer: "B restored" },
+    { id: "images", label: "Images", type: "grid", layers: ["A", "B"] },
     { id: "freq", label: "Frequency", type: "grid", layers: ["|F₁|", "|F₂|", "∠R", "r(x,y)"] },
   ],
   headline: (r) => {
@@ -157,7 +158,7 @@ const align: ToolDef = {
   },
   request: (p, input, media) => ({
     ...pairSource(input, media, p),
-    dy: p.dy, dx: p.dx, noise: p.noise, window: p.window, subpixel: p.subpixel,
+    maxSide: p.maxSide, dy: p.dy, dx: p.dx, noise: p.noise, window: p.window, subpixel: p.subpixel,
     beta: p.beta, lowpass: p.lowpass, overlay: p.overlay, tile: p.tile, alpha: p.alpha,
   }),
 };

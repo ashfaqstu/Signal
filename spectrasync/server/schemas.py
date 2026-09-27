@@ -135,6 +135,7 @@ class AlignParams(CamelModel):
     media_id: str | None = None
     a_index: int = 0
     b_index: int = 1
+    max_side: int = 768
     base_id: str | None = None
     dy: float = 12.5
     dx: float = -7.5

@@ -23,7 +23,7 @@ const STARTS: Start[] = [
   { tool: "stack", title: "Clean a noisy burst", group: "Burst · noisy", pick: 0 },
   { tool: "highlight", title: "Spot moving people", group: "Crowd · highlight", pick: 5 },
   { tool: "rotate", title: "Straighten a pair", group: "Pair · rotated", pick: 1 },
-  { tool: "align", title: "Align a shifted shot", group: "Base · translation", pick: 0, simulate: true },
+  { tool: "align", title: "Align a shifted shot", group: "Pair · translation", pick: 1 },
   { tool: "spectrum", title: "Explore the spectrum", group: "Base · theory", pick: 0 },
 ];
 
